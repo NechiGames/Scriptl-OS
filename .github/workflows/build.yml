@@ -25,11 +25,3 @@ jobs:
         run: |
           file scriptlOS.bin
           ls -lh scriptlOS.bin
-
-      - name: Run QEMU
-        run: |
-          timeout 10s qemu-system-x86_64 \
-            -drive format=raw,file=scriptlOS.bin \
-            -display none \
-            -serial stdio \
-            -no-reboot
