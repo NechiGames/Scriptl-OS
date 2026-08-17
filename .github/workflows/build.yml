@@ -1,0 +1,35 @@
+name: Build ScriptlOS
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          sudo apt update
+          sudo apt install -y nasm qemu-system-x86
+
+      - name: Build bootloader
+        run: |
+          nasm -f bin boot/boot.asm -o scriptlOS.bin
+
+      - name: Check image
+        run: |
+          file scriptlOS.bin
+          ls -lh scriptlOS.bin
+
+      - name: Run QEMU
+        run: |
+          timeout 10s qemu-system-x86_64 \
+            -drive format=raw,file=scriptlOS.bin \
+            -display none \
+            -serial stdio \
+            -no-reboot
